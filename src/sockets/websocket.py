@@ -1,20 +1,24 @@
 from tornado.websocket import WebSocketHandler
-from textProcessing.ProcessText import ProcessText
-from asynchronous.countdown import EventLoop, Countdown
-from note import Notes
 import string_to_date as std
+import requests
 from summarize import summarizeArr
+from rasa.rasa import OSState, RasaResult
+from rasa.Intents import IntentLookup
 
 DURATION_CONST = 20
+
+VOICEOSURL = "http://voiceos.localtunnel.me/parse"
 
 class WebSocket(WebSocketHandler):
 
     eventLoop = None
     countDown = None
     uuid = None
+    appInstance = None
 
     state = "greeting"
-    notes = Notes()
+    osstate = None
+
     '''
     Crucial methods to WebSocket class
     '''
@@ -27,12 +31,37 @@ class WebSocket(WebSocketHandler):
 
     def on_message(self, str):
         print("on_message: ", str)
-        if self.state is "ready":
-            self.handleReadyState(str)
-        elif self.state is "reading":
-            self.handleReadingState(str)
-        elif self.state is "writing":
-            self.handleWritingState(str)
+        intentFromRasa = self.getIntent(str)
+
+        if intentFromRasa.intent is "home":
+            self.comebackhome()
+        elif self.appInstance is not None:
+            self.appInstance.handle(str)
+        elif self.canLaunchAppFromIntent(intentFromRasa):
+            self.launchAppFromIntent(intentFromRasa)
+        else:
+            self.speakMessage("I dont understand what you are talking about, ask my creator for options")
+
+    def canLaunchAppFromIntent(self, intentFromRasa):
+        return intentFromRasa.confidence > 0.5
+
+    def launchAppFromIntent(self, intentFromRasa):
+
+        self.appInstance =
+
+    def comebackhome(self):
+        self.osstate = OSState.Home
+        self.speakMessage("We are home now")
+
+    def speakMessage(self, str):
+        self.write_message(str)
+
+    def getIntent(self, str):
+        r = requests.post(VOICEOSURL, json={"q": str})
+        response = r.json()
+        rasaResponse = RasaResult(msg=str, intent=response['intent']['name'],
+                                  confidence=response['intent']['confidence'])
+        return rasaResponse
 
     def handleWritingState(self, str):
         print("writing: ", str)
@@ -88,7 +117,7 @@ class WebSocket(WebSocketHandler):
         print("Socket closed.")
 
     def sayGreetingsAndOptions(self):
-        self.write_message("Hello! Would you like to read or write?")
+        self.write_message("Hello! I am home")
         self.state = "ready"
 
     def signalReady(self):
