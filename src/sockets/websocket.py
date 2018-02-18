@@ -52,6 +52,7 @@ class WebSocket(WebSocketHandler):
         print("launchAppFromIntent")
         self.appInstance = self.instanceFromIntent(intentFromRasa.intent)
         action = self.appInstance.onStart()
+        print ("action from launchAppFromIntent", action)
         if action:
             self.write_message(self.jsonify(action))
 
