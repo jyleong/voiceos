@@ -7,4 +7,4 @@ class imageSearchApp(object):
                 "actionDetail": "image image"}
 
     def onStart(self):
-        return "image image"
+        return "searching images... oops looks that part of me is not yet implemented"
