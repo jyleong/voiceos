@@ -1,7 +1,8 @@
 
+
 IntentLookup = {
-    'cats':'',
-    'image search': '',
-    'home': ''
+    'cats':("catapp", "catApp"),
+    'image search': ("imagesearchapp", "imageSearchApp"),
+    'pizza': ("pizzaapp", "pizzaApp")
 
 }

@@ -12,7 +12,7 @@ if __name__ == '__main__':
         (r'/websocket/', WebSocket)
     ])
 
-    print("Running server...")
+    print("Running server on port 5000...")
 
     server.listen(5000)
     IOLoop.instance().start()

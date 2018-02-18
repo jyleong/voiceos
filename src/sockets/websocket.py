@@ -43,24 +43,37 @@ class WebSocket(WebSocketHandler):
             self.speakMessage("I dont understand what you are talking about, ask my creator for options")
 
     def canLaunchAppFromIntent(self, intentFromRasa):
-        return intentFromRasa.confidence > 0.5
+        return intentFromRasa.confidence > 0.4
 
     def launchAppFromIntent(self, intentFromRasa):
+        print("launcAppFromIntent")
+        self.appInstance = self.instanceFromIntent(intentFromRasa.intent)
+        self.appInstance.onStart()
 
-        self.appInstance =
+
+    def instanceFromIntent(self, intent):
+        print("instanceFromIntent(): " + intent)
+        module_name, class_name = IntentLookup[intent]
+        module = __import__(module_name)
+        class_ = getattr(module, class_name)
+        return class_()
 
     def comebackhome(self):
         self.osstate = OSState.Home
         self.speakMessage("We are home now")
+        self.appInstance = None
 
     def speakMessage(self, str):
         self.write_message(str)
 
     def getIntent(self, str):
+        print("getIntent(): " + str)
         r = requests.post(VOICEOSURL, json={"q": str})
         response = r.json()
+        print(response)
         rasaResponse = RasaResult(msg=str, intent=response['intent']['name'],
                                   confidence=response['intent']['confidence'])
+        print("rasaResponse intent: " + rasaResponse.intent)
         return rasaResponse
 
     def handleWritingState(self, str):
