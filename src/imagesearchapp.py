@@ -4,7 +4,8 @@ class imageSearchApp(object):
 
     def handle(self, str):
         return {"actionType": "speak",
-                "actionDetail": "image image"}
+                "actionDetail": "searching images... oops looks that part of me is not yet implemented"}
 
     def onStart(self):
-        return "searching images... oops looks that part of me is not yet implemented"
+        return {"actionType": "speak",
+                "actionDetail": "searching images... oops looks that part of me is not yet implemented"}
