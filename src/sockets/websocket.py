@@ -30,13 +30,16 @@ class WebSocket(WebSocketHandler):
         self.sayGreetingsAndOptions()
 
     def on_message(self, str):
+        if str == "ping":
+            return
         print("on_message: ", str)
         intentFromRasa = self.getIntent(str)
 
         if intentFromRasa.intent is "home":
             self.comebackhome()
         elif self.appInstance is not None:
-            self.appInstance.handle(str)
+            result = self.appInstance.handle(str)
+            print(result)
         elif self.canLaunchAppFromIntent(intentFromRasa):
             self.launchAppFromIntent(intentFromRasa)
         else:
@@ -46,10 +49,15 @@ class WebSocket(WebSocketHandler):
         return intentFromRasa.confidence > 0.4
 
     def launchAppFromIntent(self, intentFromRasa):
-        print("launcAppFromIntent")
+        print("launchAppFromIntent")
         self.appInstance = self.instanceFromIntent(intentFromRasa.intent)
-        self.appInstance.onStart()
+        action = self.appInstance.onStart()
+        if action:
+            self.write_message(self.jsonify(action))
 
+    def jsonify(self, action):
+        import json
+        return json.dumps(action)
 
     def instanceFromIntent(self, intent):
         print("instanceFromIntent(): " + intent)
