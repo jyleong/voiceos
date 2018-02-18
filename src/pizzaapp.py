@@ -7,4 +7,4 @@ class pizzaApp(object):
                 "actionDetail": "pepperoni"}
 
     def onStart(self):
-        return "I have order an ten inch pepperoni cheese thich crush pizza. Estimated arrival is 20 mins"
+        return "I have ordered an ten inch pepperoni pizza. Estimated arrival is 20 mins"

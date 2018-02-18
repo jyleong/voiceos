@@ -17,7 +17,7 @@ class WebSocket(WebSocketHandler):
     appInstance = None
 
     state = "greeting"
-    osstate = None
+    # osstate = None
 
     '''
     Crucial methods to WebSocket class
@@ -34,8 +34,10 @@ class WebSocket(WebSocketHandler):
             return
         print("on_message: ", str)
         intentFromRasa = self.getIntent(str)
+        print("intentFromRasa:", intentFromRasa.intent)
 
-        if intentFromRasa.intent is "home":
+        if intentFromRasa.intent == "home":
+            print("================I SHOULD BE HOME RIGHT NOW==================")
             self.comebackhome()
         elif self.appInstance is not None:
             result = self.appInstance.handle(str)
@@ -68,7 +70,7 @@ class WebSocket(WebSocketHandler):
         return class_()
 
     def comebackhome(self):
-        self.osstate = OSState.Home
+        # self.osstate = OSState.Home
         self.speakMessage("We are home now")
         self.appInstance = None
 
