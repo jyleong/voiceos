@@ -32,20 +32,18 @@ class WebSocket(WebSocketHandler):
     def on_message(self, str):
         if str == "ping":
             return
-        print("on_message: ", str)
         intentFromRasa = self.getIntent(str)
-        print("intentFromRasa:", intentFromRasa.intent)
-
+        result = {}
         if intentFromRasa.intent == "home":
             print("================I SHOULD BE HOME RIGHT NOW==================")
             self.comebackhome()
         elif self.appInstance is not None:
             result = self.appInstance.handle(str)
-            print(result)
         elif self.canLaunchAppFromIntent(intentFromRasa):
             self.launchAppFromIntent(intentFromRasa)
         else:
             self.speakMessage("I dont understand what you are talking about, ask my creator for options")
+        self.write_message(result)
 
 # this is HAX, rasa already told what the json is
     def canLaunchAppFromIntent(self, intentFromRasa):
@@ -61,7 +59,9 @@ class WebSocket(WebSocketHandler):
 
     def jsonify(self, action):
         import json
-        return json.dumps(action)
+        encoded = json.dumps(action)
+        print('jsonify', encoded)
+        return encoded
 
     def instanceFromIntent(self, intent):
         print("instanceFromIntent(): " + intent)
@@ -73,10 +73,15 @@ class WebSocket(WebSocketHandler):
     def comebackhome(self):
         # self.osstate = OSState.Home
         self.speakMessage("We are home now")
+        self.clearClient()
         self.appInstance = None
 
+    def clearClient(self):
+        self.write_message(self.jsonify({"actionType": "clear"}))
+
     def speakMessage(self, str):
-        self.write_message(str)
+        payload = self.jsonify({"actionType": "speak", "actionDetail": str})
+        self.write_message(payload)
 
     def getIntent(self, str):
         print("getIntent(): " + str)
@@ -142,7 +147,7 @@ class WebSocket(WebSocketHandler):
         print("Socket closed.")
 
     def sayGreetingsAndOptions(self):
-        self.write_message("Hello! I am home")
+        self.speakMessage("Hello! I am home")
         self.state = "ready"
 
     def signalReady(self):
@@ -151,10 +156,8 @@ class WebSocket(WebSocketHandler):
 
     def saveNote(self, str):
         if not self.isValid(str):
-            print("saveNote isLongEnough")
             return False
         self.notes.pushNote(str)
-        print("saveNote pushedNote")
         return True
 
     def isValid(self, str):
