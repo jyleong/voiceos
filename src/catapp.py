@@ -14,6 +14,9 @@ class CatApp:
         self.catsdict = None
         self.ctr = 0
 
+    def onStart(self):
+        return "meow"
+
 
     def handle(self, incomingtext):
         if self.userState == CatState.Active:

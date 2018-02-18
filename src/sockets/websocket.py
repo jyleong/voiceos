@@ -47,6 +47,7 @@ class WebSocket(WebSocketHandler):
         else:
             self.speakMessage("I dont understand what you are talking about, ask my creator for options")
 
+# this is HAX, rasa already told what the json is
     def canLaunchAppFromIntent(self, intentFromRasa):
         return intentFromRasa.confidence > 0.4
 
