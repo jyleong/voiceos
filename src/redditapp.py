@@ -19,7 +19,9 @@ class RedditApp:
     def handle(self, incomingtext):
         someDict = dict()
         
+        #convert to lower, remove spaces.
         lowerText = incomingtext.lower()
+        lowerText = lowerText.replace(" ", "")
 
         if lowerText == "cat" or lowerText == "cats" or lowerText == "got" or lowerText == "chat":
             
@@ -27,7 +29,7 @@ class RedditApp:
                 self.picsdict = None
                 self.ctr = 0
                 self.lastWord = "cat"
-            someDict = self.showThing("cats")
+            someDict = self.showThing("catsstandingup")
             
         elif lowerText == "dog" or lowerText == "dogs":
             
