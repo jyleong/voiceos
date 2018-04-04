@@ -1,5 +1,5 @@
 # Voiceos Server
-Repository the Voiceos websocket server
+Repository for Voiceos websocket server
 
 ### Environment Setup
 Install python3:
@@ -16,7 +16,7 @@ Install and configure virtualenv:
 ```
 
 # Using and Updating the Environment:
-Anytime you want to activate this environment:
+Activate this environment:
 ```
 > source ~/Python_envs/voiceos/bin/activate
 ```
@@ -43,7 +43,7 @@ To add a required package to the project, use the `pip freeze` command:
 Run instructions
 install mysql
 make database voiceos
-to export env variables, copy and paste voiceos.env from wiki into repo and change python path
+to export env variables. Copy and paste voiceos.env from wiki into repo and change python path
 export environment variables:
 ```
 (voiceos) > source voiceos.env
@@ -57,7 +57,7 @@ mysql -u root -p
 mysql -u username -p
 CREATE DATABASE voiceos;
 ```
-Once voiceos database has been created, now you can go to the your virtual environment
+Once voiceos database has been created, you can now go to the your virtual environment
 ```
 (voiceos) > python3 src/manage.py db upgrade
 (voiceos) > python3 src/manage.py seed
