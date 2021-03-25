@@ -31,7 +31,7 @@ PyMySQL==0.7.11
 python-dateutil==2.6.1
 python-editor==1.0.3
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.4
 rake-nltk==1.0.2
 regex==2018.2.8
 requests==2.18.2
